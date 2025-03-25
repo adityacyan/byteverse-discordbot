@@ -47,17 +47,20 @@ async def createteam(ctx, role_name: str, *members: discord.Member):
         role: discord.PermissionOverwrite(view_channel=True)
     }
 
-    # Create a category
+# Create a category
     category = await guild.create_category(role_name, overwrites=overwrites)
     await ctx.send(f"✅ Created category: {category.name}")
 
-    # Create private text channel within the category
-    text_channel = await guild.create_text_channel(role_name, overwrites=overwrites, category=category)
+    # Create private text channel and then assign the category
+    text_channel = await guild.create_text_channel(role_name, overwrites=overwrites)
+    await text_channel.edit(category=category)
     await ctx.send(f"✅ Created private text channel: #{text_channel.name}")
 
-    # Create private voice channel within the category
-    voice_channel = await guild.create_voice_channel(role_name, overwrites=overwrites, category=category)
+    # Create private voice channel and then assign the category
+    voice_channel = await guild.create_voice_channel(role_name, overwrites=overwrites)
+    await voice_channel.edit(category=category)
     await ctx.send(f"✅ Created private voice channel: {voice_channel.name}")
+
 
     if not any(role.name.lower() in allowed_roles for role in ctx.author.roles):
         user_team_creation[ctx.author.id] = role_name
