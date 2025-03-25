@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import os
 from webserver import keep_alive
+import requests
+import threading
 
 intents = discord.Intents.default()
 intents.messages = True
@@ -17,7 +19,6 @@ user_team_creation = {}
 @bot.event
 async def on_ready():
     print(f'{bot.user} is online and ready!')
-    
 
 @bot.command()
 async def createteam(ctx, role_name: str, *members: discord.Member):
@@ -61,6 +62,21 @@ async def createteam(ctx, role_name: str, *members: discord.Member):
 
 # Keep the webserver alive
 keep_alive()
+
+# Prevent Render instance from stopping
+url = os.getenv('URL')  # Get URL from environment variable
+interval = 30000  # Interval in milliseconds (30 seconds)
+
+def reload_website():
+    while True:
+        try:
+            response = requests.get(url)
+            print(f"Reloaded at {response.status_code}: {response.reason}")
+        except Exception as e:
+            print(f"Error reloading: {str(e)}")
+        threading.Event().wait(interval / 1000)
+
+threading.Thread(target=reload_website, daemon=True).start()
 
 # Run the bot
 bot.run(os.getenv('DISCORD_TOKEN'))
