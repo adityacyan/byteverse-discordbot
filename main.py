@@ -47,12 +47,16 @@ async def createteam(ctx, role_name: str, *members: discord.Member):
         role: discord.PermissionOverwrite(view_channel=True)
     }
 
-    # Create private text channel
-    text_channel = await guild.create_text_channel(role_name, overwrites=overwrites)
+    # Create a category
+    category = await guild.create_category(role_name, overwrites=overwrites)
+    await ctx.send(f"✅ Created category: {category.name}")
+
+    # Create private text channel within the category
+    text_channel = await guild.create_text_channel(role_name, overwrites=overwrites, category=category)
     await ctx.send(f"✅ Created private text channel: #{text_channel.name}")
 
-    # Create private voice channel
-    voice_channel = await guild.create_voice_channel(role_name, overwrites=overwrites)
+    # Create private voice channel within the category
+    voice_channel = await guild.create_voice_channel(role_name, overwrites=overwrites, category=category)
     await ctx.send(f"✅ Created private voice channel: {voice_channel.name}")
 
     if not any(role.name.lower() in allowed_roles for role in ctx.author.roles):
@@ -65,7 +69,7 @@ keep_alive()
 
 # Prevent Render instance from stopping
 url = os.getenv('URL')  # Get URL from environment variable
-interval = os.getenv(TIME)  # Interval in milliseconds (30 seconds)
+interval = int(os.getenv('TIME', '30000'))  # Interval in milliseconds (default to 30 seconds)
 
 def reload_website():
     while True:
