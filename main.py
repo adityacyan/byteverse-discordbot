@@ -70,7 +70,8 @@ keep_alive()
 
 # Prevent Render instance from stopping
 url = os.getenv('URL')  # Get URL from environment variable
-interval = os.getenv('TIME')  # Interval in milliseconds (30 seconds)
+interval = int(os.getenv('TIME', '30000'))  # default to 30000 ms if TIME isn't set
+  # Interval in milliseconds (30 seconds)
 
 def reload_website():
     while True:
