@@ -17,6 +17,7 @@ user_team_creation = {}
 @bot.event
 async def on_ready():
     print(f'{bot.user} is online and ready!')
+    
 
 @bot.command()
 async def createteam(ctx, role_name: str, *members: discord.Member):
@@ -44,11 +45,19 @@ async def createteam(ctx, role_name: str, *members: discord.Member):
         guild.default_role: discord.PermissionOverwrite(view_channel=False),
         role: discord.PermissionOverwrite(view_channel=True)
     }
-    channel = await guild.create_text_channel(role_name, overwrites=overwrites)
-    await ctx.send(f"✅ Created private channel: #{channel.name}")
+
+    # Create private text channel
+    text_channel = await guild.create_text_channel(role_name, overwrites=overwrites)
+    await ctx.send(f"✅ Created private text channel: #{text_channel.name}")
+
+    # Create private voice channel
+    voice_channel = await guild.create_voice_channel(role_name, overwrites=overwrites)
+    await ctx.send(f"✅ Created private voice channel: {voice_channel.name}")
 
     if not any(role.name.lower() in allowed_roles for role in ctx.author.roles):
         user_team_creation[ctx.author.id] = role_name
+
+    await ctx.send("🎉 Welcome to Byteverse-2025!")
 
 # Keep the webserver alive
 keep_alive()
