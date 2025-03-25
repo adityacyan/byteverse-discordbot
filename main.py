@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import os
-from webserver import keep_alive
+from webserver import keep_alive, update_last_ping_time
 import requests
 import threading
 
@@ -72,6 +72,7 @@ def reload_website():
         try:
             response = requests.get(url)
             print(f"Reloaded at {response.status_code}: {response.reason}")
+            update_last_ping_time()
         except Exception as e:
             print(f"Error reloading: {str(e)}")
         threading.Event().wait(interval / 1000)
