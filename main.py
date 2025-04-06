@@ -41,10 +41,21 @@ async def createteam(ctx, role_name: str, *members: discord.Member):
         await member.add_roles(role)
     await ctx.send(f"✅ Assigned `{role_name}` to {', '.join([member.name for member in members])}")
 
+    discord_team_role = discord.utils.get(guild.roles, name='discord-team')
+    judge_poc_role = discord.utils.get(guild.roles, name='judge-poc')
+
     overwrites = {
         guild.default_role: discord.PermissionOverwrite(view_channel=False),
-        role: discord.PermissionOverwrite(view_channel=True)
+        role: discord.PermissionOverwrite(view_channel=True),
     }
+
+    if discord_team_role:
+        overwrites[discord_team_role] = discord.PermissionOverwrite(view_channel=True)
+
+    if judge_poc_role:
+        overwrites[judge_poc_role] = discord.PermissionOverwrite(view_channel=True)
+
+
 
 
 
