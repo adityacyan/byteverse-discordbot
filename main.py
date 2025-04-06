@@ -22,7 +22,7 @@ async def on_ready():
 
 @bot.command()
 async def createteam(ctx, role_name: str, *members: discord.Member):
-    allowed_roles = ['organisers-2025', 'Core']
+    allowed_roles = ['discord-team','organisers-2025', 'core']
     if any(role.name.lower() in allowed_roles for role in ctx.author.roles):
         pass
     else:
