@@ -64,6 +64,24 @@ async def createteam(ctx, role_name: str, *members: discord.Member):
 
     await ctx.send("🎉 Welcome to Byteverse-2025!")
 
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send(f"❌ Missing argument: {error.param.name}")
+    elif isinstance(error, commands.BadArgument):
+        await ctx.send("❌ Invalid argument type.")
+    elif isinstance(error, commands.MissingPermissions):
+        await ctx.send("❌ You don't have the required permissions.")
+    elif isinstance(error, commands.CommandNotFound):
+        await ctx.send("❌ Command not found.")
+    elif isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("❌ I don't have the necessary permissions to do that.")
+    elif isinstance(error, commands.CommandInvokeError):
+        await ctx.send(f"⚠️ An error occurred while executing the command: `{error.original}`")
+    else:
+        await ctx.send(f"⚠️ Unexpected error: `{error}`")
+
 # Keep the webserver alive
 keep_alive()
 
