@@ -22,13 +22,12 @@ async def on_ready():
 
 @bot.command()
 async def createteam(ctx, role_name: str, *members: discord.Member):
-    allowed_roles = ['discord-team','organisers-2025', 'core']
-    if any(role.name.lower() in allowed_roles for role in ctx.author.roles):
-        pass
-    else:
-        if ctx.author.id in user_team_creation:
-            await ctx.send("❌ You have already created a team. You can't create another one.")
-            return
+    allowed_roles = ['discord-team', 'organisers-2025', 'core']
+    user_roles = [role.name.lower() for role in ctx.author.roles]
+
+    if not any(role in allowed_roles for role in user_roles):
+        await ctx.send("❌ You don't have permission to create a team.")
+        return
 
     if len(members) > 4:
         await ctx.send("❌ You can only add up to 4 members.")
